@@ -46,6 +46,10 @@ export default function Home({ initialQuestion, questions }) {
     }
   }
 
+  const buttonClass = 'mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+  const inputClass =
+    'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
@@ -55,11 +59,11 @@ export default function Home({ initialQuestion, questions }) {
 
       <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
         <label htmlFor="question">{question.question}</label>
-        <div>
+        <div className="mt-4">
           <input
             ref={inputRef}
             id="question"
-            className="m-4 border border-gray-500"
+            className={inputClass}
             type="text"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
@@ -67,22 +71,29 @@ export default function Home({ initialQuestion, questions }) {
           />
         </div>
 
-        {isCorrect === undefined ? (
-          <button onClick={checkAnswer} className="border border-gray-500 p-2 m-4">
-            Check answer
-          </button>
-        ) : (
-          <>
-            {isCorrect ? (
-              <div>Correct!</div>
-            ) : (
-              <div>Incorrect, the answer is: {question.answer}</div>
-            )}
-            <button onClick={nextQuestion} className="border border-gray-500 p-2 m-4">
-              Next question
+        <div>
+          {isCorrect === undefined ? (
+            <button onClick={checkAnswer} className={buttonClass}>
+              Check answer
             </button>
-          </>
-        )}
+          ) : (
+            <>
+              <div className="mt-4">
+                {isCorrect ? (
+                  <div className="text-lg font-bold">Correct!</div>
+                ) : (
+                  <div>
+                    Incorrect, the answer is:
+                    <div className="text-lg font-bold">{question.answer}</div>
+                  </div>
+                )}
+              </div>
+              <button onClick={nextQuestion} className={buttonClass}>
+                Next question
+              </button>
+            </>
+          )}
+        </div>
       </main>
     </div>
   )
