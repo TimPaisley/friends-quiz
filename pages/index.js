@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { allQuestions, randomQuestion } from '../lib/questions'
 
@@ -7,6 +7,12 @@ export default function Home({ initialQuestion, questions }) {
   const [question, setQuestion] = useState(initialQuestion)
   const [answer, setAnswer] = useState('')
   const [isCorrect, setIsCorrect] = useState()
+
+  const inputRef = useRef()
+
+  useEffect(() => {
+    inputRef.current && inputRef.current.focus()
+  }, [])
 
   const checkAnswer = () => {
     const correct = cleanAnswer(question.answer) === cleanAnswer(answer)
@@ -34,6 +40,12 @@ export default function Home({ initialQuestion, questions }) {
     setQuestion(questions[random])
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      isCorrect === undefined ? checkAnswer() : nextQuestion()
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
@@ -45,11 +57,13 @@ export default function Home({ initialQuestion, questions }) {
         <label htmlFor="question">{question.question}</label>
         <div>
           <input
+            ref={inputRef}
             id="question"
             className="m-4 border border-gray-500"
             type="text"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
 
